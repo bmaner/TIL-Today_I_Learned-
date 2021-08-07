@@ -190,17 +190,9 @@ import data from './data';
 function Image({ url, index, camera }) {
   const [active, setActive] = useState(0);
   const mesh = useRef();
-  let speed = 0;
+  let speed = 0.2;
   let positionX = 0;
   let plus = 0;
-
-  useEffect(() => {
-    //처음에 촤르르 효과 해결이 안된다.
-    speed = -0.3;
-    // positionX += speed;
-    // speed *= 0.95;
-    // mesh.current.position.x = index * 1.2 + positionX * 1.2;
-  }, []);
 
   window.addEventListener('wheel', e => {
     speed += e.deltaY * 0.0005;
@@ -211,9 +203,9 @@ function Image({ url, index, camera }) {
     config: { mass: 5, tension: 400, friction: 50, precision: 0.0001 },
   });
   const scale = spring.to([0, 1], [1, 1.2]);
-  const rotation = spring.to([0, 1], [0, Math.PI]);
+  const rotation = spring.to([0, 1], [0, Math.PI * 2]);
   const position = useMemo(() => {
-    return [index * 1.2, -0.5, 4];
+    return [index * 1.2, -0.5, 3.5];
   }, []);
 
   const texture = useLoader(THREE.TextureLoader, url);
@@ -221,7 +213,7 @@ function Image({ url, index, camera }) {
     positionX += speed - plus;
     speed *= 0.95;
     plus *= 0.95;
-    active ? (mesh.current.position.y = 0) : (mesh.current.position.y = -0.5);
+    active ? (mesh.current.position.y = -0.5) : (mesh.current.position.y = -1);
     camera.position.x = positionX * 1.2;
 
     if (camera.position.x > 9.7) {
@@ -263,7 +255,7 @@ function App() {
   return (
     <div
       className="App"
-      style={{ background: '#191A20', width: '100vw', height: '100vh' }}
+      style={{ background: '#191A20', width: '100vw', height: '700px' }}
     >
       <Canvas>
         <Images />
