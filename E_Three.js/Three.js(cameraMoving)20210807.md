@@ -104,5 +104,5 @@ export default App;
 
 ## 내일 구현 시 참고할 수 있는 사이트
 
-- https://react-spring.io/hooks/use-spring `landing button`에 적용하면 좋을 듯
-- https://www.framer.com/docs/animate-shared-layout/ `sign-up page option`항목에 적용하면 좋을 듯
+- [spring](https://react-spring.io/hooks/use-spring) `landing button`에 적용하면 좋을 듯
+- [framer-motion](https://www.framer.com/docs/animate-shared-layout/) `sign-up page option`항목에 적용하면 좋을 듯

@@ -186,6 +186,7 @@ import React, { Suspense, useEffect, useState, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { animated, useSpring } from '@react-spring/three';
 import data from './data';
+import Accordion from './Components/Accordion';
 
 function Image({ url, index, camera }) {
   const [active, setActive] = useState(0);
@@ -253,13 +254,94 @@ function Images() {
 
 function App() {
   return (
-    <div
-      className="App"
-      style={{ background: '#191A20', width: '100vw', height: '700px' }}
-    >
-      <Canvas>
-        <Images />
-      </Canvas>
+    <div>
+      <div
+        className="App"
+        style={{
+          background: '#191A20',
+          width: '100vw',
+          height: '700px',
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            zIndex: '1000',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100vw',
+            height: '166px',
+            position: 'absolute',
+            left: '0',
+            top: '103px',
+            color: '#fff',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100vw',
+              height: '26px',
+              fontFamily: 'Noto Sans',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              fontSize: '24px',
+              lineHeight: '35px',
+            }}
+          >
+            개발하는 당신을 위한 얕고 넓은 지식,
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100vw',
+              height: '75px',
+              marginTop: '8px',
+              fontFamily: 'Noto Sans',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              fontSize: '72px',
+              lineHeight: '35px',
+            }}
+          >
+            DEVzine:port
+          </div>
+        </div>
+        <div
+          style={{
+            zIndex: '1000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            width: '265px',
+            height: '55px',
+            top: '269px',
+            background: '#FFDD14',
+            borderRadius: '8px',
+            fontFamily: 'Noto Sans KR',
+            fontStyle: 'normal',
+            fontWeight: 'bold',
+            fontSize: '18px',
+            lineHeight: '28px',
+            color: '#000000',
+            cursor: 'pointer',
+          }}
+        >
+          시작하기
+        </div>
+        <Canvas>
+          <Images />
+        </Canvas>
+      </div>
+      <div>안녕하세요</div>
+      <Accordion />
     </div>
   );
 }
