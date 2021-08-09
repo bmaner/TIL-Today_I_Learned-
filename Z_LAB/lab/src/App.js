@@ -182,10 +182,11 @@
 
 import './App.css';
 import * as THREE from 'three';
-import React, { Suspense, useEffect, useState, useMemo, useRef } from 'react';
+import React, { Suspense, useState, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { animated, useSpring } from '@react-spring/three';
 import data from './data';
+import BlinkText from './Components/BlinkText';
 import Accordion from './Components/Accordion';
 
 function Image({ url, index, camera }) {
@@ -286,11 +287,9 @@ function App() {
               justifyContent: 'center',
               width: '100vw',
               height: '26px',
-              fontFamily: 'Noto Sans',
-              fontStyle: 'normal',
               fontWeight: 'bold',
               fontSize: '24px',
-              lineHeight: '35px',
+              // lineHeight: '35px',
             }}
           >
             개발하는 당신을 위한 얕고 넓은 지식,
@@ -302,40 +301,16 @@ function App() {
               justifyContent: 'center',
               width: '100vw',
               height: '75px',
-              marginTop: '8px',
-              fontFamily: 'Noto Sans',
-              fontStyle: 'normal',
+              marginTop: '12px',
               fontWeight: 'bold',
-              fontSize: '72px',
-              lineHeight: '35px',
+              fontSize: '80px',
+              // lineHeight: '35px',
             }}
           >
             DEVzine:port
           </div>
         </div>
-        <div
-          style={{
-            zIndex: '1000',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            width: '265px',
-            height: '55px',
-            top: '269px',
-            background: '#FFDD14',
-            borderRadius: '8px',
-            fontFamily: 'Noto Sans KR',
-            fontStyle: 'normal',
-            fontWeight: 'bold',
-            fontSize: '18px',
-            lineHeight: '28px',
-            color: '#000000',
-            cursor: 'pointer',
-          }}
-        >
-          시작하기
-        </div>
+        <BlinkText />
         <Canvas>
           <Images />
         </Canvas>

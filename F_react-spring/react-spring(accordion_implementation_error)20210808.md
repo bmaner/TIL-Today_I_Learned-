@@ -1,11 +1,11 @@
-# **react-spring** Three.js의 mesh가 아닌 일반 html태그에의 적용
+# **react-spring** accordion implementation error
 
 ## 시도했던 것들
 
 - 프로젝트에서 signup page에 가입하는 사용자가 부담스럽지 말라고(입력안해도 가입가능) 추가입력창을 숨겨놓았다.
 - 즉 추가 입력을 위해 클릭할 시 해당하는 내용이 촤르르 나와야하는데 이것이 accordion이다.
 - accordion component에 부드러운 효과를 적용하기 위해서 react-spring을 도입하고자 했다.
-- useTransition을 통해서 여러 animation을 component의 lifecycle에 적용시키고자 하였으나 `실패`
+- useTransition을 통해서 여러 animation을 component의 lifecycle에 적용시킬 수가 있는데 결과적으로는 `실패`
 - react-spring module 자체의 문제인가 싶어서 공식문서의 useSpring hooks 예시를 그대로 복붙 하였을때에 적용 `성공`
 
 ## 에러코드
