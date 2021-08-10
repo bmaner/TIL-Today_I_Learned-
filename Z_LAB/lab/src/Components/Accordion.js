@@ -1,24 +1,73 @@
 import React, { useState } from 'react';
-import { useTransition, animated, useSpring } from 'react-spring';
+import { animated, useSpring } from 'react-spring';
 
 function Accordion() {
   const [isOn, setIsOn] = useState(false);
   const { x } = useSpring({
     from: { x: 0 },
     x: isOn ? 1 : 0,
-    // config: { duration: 500 },
   });
   return (
-    <animated.div
+    <div
+      className="accordioncontainer"
       style={{
-        opacity: x.to({ range: [0, 1], output: [0.3, 1] }),
-        height: x.to({ range: [0, 1], output: [60, 100] }),
-        background: 'rgba(0, 0, 0, 0.5)',
+        width: '360px',
+        display: ' flex',
+        position: 'relative',
+        flexDirection: 'column',
+        background: 'yellow',
       }}
-      onClick={() => setIsOn(!isOn)}
     >
-      accordion
-    </animated.div>
+      <div
+        className="header"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: '32px',
+          margin: '0 32px 0 8px',
+          background: 'red',
+        }}
+      >
+        추가 정보 입력하기
+        <div
+          className="btn"
+          style={{
+            top: '8px',
+            right: '8px',
+            fontSize: '14px',
+            position: 'absolute',
+          }}
+          onClick={() => setIsOn(!isOn)}
+        >
+          열기
+        </div>
+      </div>
+      <animated.div
+        className="contentswrapper"
+        style={{
+          height: x.to({ range: [0, 1], output: [0, 260] }),
+          width: '100%',
+          overflow: 'hidden',
+        }}
+      >
+        {new Array(4).fill(0).map(el => {
+          return (
+            <animated.div
+              className="content"
+              style={{
+                opacity: x.to({ range: [0, 1], output: [0, 1] }),
+                width: '360px',
+                height: '40px',
+                marginBottom: '24px',
+                background: 'blue',
+              }}
+            >
+              {el}
+            </animated.div>
+          );
+        })}
+      </animated.div>
+    </div>
   );
 }
 
