@@ -16,6 +16,9 @@
 - 관련링크는 아래와 같습니다.  
   [useParams](https://reactrouter.com/web/example/url-params)
 
+---
+### window.close()구현이 되지 않아서 헤맸던 경험
+---
 ## 로그인을 어떻게 구현하였나?
 
 ---
