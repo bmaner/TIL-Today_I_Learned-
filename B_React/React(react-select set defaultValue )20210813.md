@@ -101,5 +101,6 @@ singleSelectData[1][2] = positionIdx;
 
 ## 내일 해봐야 할 것 & 마인드 셋
 
+- signup, mypage에서 회원가입, 정보수정 시 console 창에는 첫번째에 꼭 undefined가 뜬다. 두번째에는 정상적으로 들어와있는데...첫번째에도 DB에 정상적으로 가입이 되는지 확인해야할 듯.
 - Mypage 기고현황 구현 및 완성
 - 매거진/기고글 view 화면 작업 착수
