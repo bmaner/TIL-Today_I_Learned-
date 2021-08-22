@@ -21,6 +21,5 @@ class TIL {
 
 everyday.onload = () => {
   new TIL();
-  new commit();
 }
 ```
