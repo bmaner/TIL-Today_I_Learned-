@@ -12,7 +12,7 @@ class TIL {
     this.TypeScript = ❓;
     this.P5.js = ❓;
     this.Three.js = ❓;
-    this.react-spring = ❓;
+    this.reactspring = ❓;
     this.resume = ❓;
     this.Interview = ❓;
     this.LAB = ❓;
