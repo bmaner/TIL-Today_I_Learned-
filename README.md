@@ -10,7 +10,12 @@ class TIL {
     this.JavaScript = ❓;
     this.React = ❓;
     this.TypeScript = ❓;
-    this.ERROR = ❓;
+    this.P5.js = ❓;
+    this.Three.js = ❓;
+    this.react-spring = ❓;
+    this.resume = ❓;
+    this.Interview = ❓;
+    this.LAB = ❓;
   }
 }
 
