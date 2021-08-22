@@ -19,7 +19,8 @@ class TIL {
   }
 }
 
-everyday.morning.onload = () => {
+everyday.onload = () => {
   new TIL();
+  new commit();
 }
 ```
