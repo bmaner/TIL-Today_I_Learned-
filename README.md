@@ -10,11 +10,16 @@ class TIL {
     this.JavaScript = ❓;
     this.React = ❓;
     this.TypeScript = ❓;
-    this.ERROR = ❓;
+    this.P5.js = ❓;
+    this.Three.js = ❓;
+    this.reactspring = ❓;
+    this.resume = ❓;
+    this.Interview = ❓;
+    this.LAB = ❓;
   }
 }
 
-everyday.morning.onload = () => {
+everyday.onload = () => {
   new TIL();
 }
 ```
