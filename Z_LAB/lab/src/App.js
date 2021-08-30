@@ -192,7 +192,8 @@ import Accordion from './Components/Accordion';
 function Image({ url, index, camera }) {
   const [active, setActive] = useState(0);
   const mesh = useRef();
-  let speed = 0.2;
+  // let speed = 0.2;
+  let speed = 0;
   let positionX = 0;
   let plus = 0;
 
@@ -216,13 +217,13 @@ function Image({ url, index, camera }) {
     speed *= 0.95;
     plus *= 0.95;
     active ? (mesh.current.position.y = -0.5) : (mesh.current.position.y = -1);
-    camera.position.x = positionX * 1.2;
+    mesh.current.position.x = positionX + 1.2 * index;
 
-    if (camera.position.x > 9.7) {
-      plus = camera.position.x - 9.7;
-    } else if (camera.position.x < 0) {
-      plus = camera.position.x;
-    }
+    // if (camera.position.x > 9.7) {
+    //   plus = camera.position.x - 9.7;
+    // } else if (camera.position.x < 0) {
+    //   plus = camera.position.x;
+    // }
   });
 
   return (
@@ -315,8 +316,8 @@ function App() {
           <Images />
         </Canvas>
       </div>
-      <div>안녕하세요</div>
-      <Accordion />
+      {/* <div>안녕하세요</div>
+      <Accordion /> */}
     </div>
   );
 }
