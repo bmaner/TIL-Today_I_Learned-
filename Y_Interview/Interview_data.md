@@ -1,5 +1,35 @@
 # **Interview_Data** 이 자료는 분명 도움이 될 것이다!
 
+## 기술면접
+
+---
+
+### [NodeJS] Node.js에서 비동기의 개념은 어떻게 되나요?
+
+#### synchronous(동기) & asynchronous(비동기) 차이와 의미
+
+- 일이 처리되면서 그 일이 오랫동안 처리되어야하는 경우에도 기다렸다가 그 다음일을 처리하는 것이 `동기적`인 처리방식이고.
+- 병렬적으로 동시에 여러가지를 처리하는 것이 `비동기적`인 처리방식이다.
+<!-- - 비동기는 효율적이지만 복잡하다. -->
+- Node JS는 비동기적 처리를 기본으로 한다.(하기위한 좋은 기능을 가지고 있음.)
+
+#### fs.readFile은 비동기, fs.readFileSync는 동기적인 것을 의미하며
+
+> `EX` fs.readFile(path[options], callback)과 fs.readFileSync(path[options]) readFile에는 callback이 있고 readFileSync에는 callback이 없다.
+
+함수호출 순서에서 함수의 콜백이 이루어졌을때 콜백의 결과를 기다리는 것이 아닌 콜백함수를 호출하면서 다음줄을 실행하는 경우를 뜻 한다.
+
+NodeJS는 multi Thread 방식의 문제점을 보완하기위해 Single Thread + Non-blocking I/O 방식을 도입한 FrameWork이다.
+
+#### 알아야할 개념
+
+- CPU Bound, I/O Bound
+- Event Loop
+- multi thread
+- single thread
+
+[비동기 관련 참고하여 조사하자](https://qkraudghgh.github.io/node/2016/10/23/node-async.html)
+
 ## 프로젝트를 진행하며 어려웠던 경험?
 
 ---
@@ -17,8 +47,11 @@
   [useParams](https://reactrouter.com/web/example/url-params)
 
 ---
+
 ### window.close()구현이 되지 않아서 헤맸던 경험
+
 ---
+
 ## 로그인을 어떻게 구현하였나?
 
 ---
