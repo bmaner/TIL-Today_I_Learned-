@@ -63,3 +63,11 @@ callback으로 연쇄적인 비동기를 사용할 경우에는 error 처리를 
 NodeJS는 V8과 libuv를 바탕으로 만들어졌으며 터미널과 같이 웹 이외의 환경에서도 작동되기위해 그리고 다양한 용도로 확장되어 사용되기 위해 만들어진 자바스크립트 런타임입니다. 
 
 
+## JavaScript에서 event loop란 무엇인가요?
+
+event loop는 callstack과 task queue를 주시하며
+callstack이 비어있다면 task queue의 가장 오래된(첫번째) 메세지를
+callstack에 넣어주어서 메세지(콜백함수)가 실행되게 하는 것.(즉 콜백함수가 호출되게 하는 것)
+(콜백함수가 호출되면 값을 반환하고 스택을 비우게 된다.)
+
+[event loop관련 TIL](https://bedeveloper.tistory.com/86)
