@@ -118,11 +118,11 @@ nums  = evens.map(function (v, i) { return v + i; });
 ```
 **화살표 함수는 lexical this를 따른다. => 이게 무슨 말인지 추가 조사 필요**
  > 참고 this란?
- > javascript에서 this란 생성자 함수안에서 앞으로 생성될 인스턴스를 가르키는 식별자이다. 
+ > javascript에서 this란 생성자 함수안에서 앞으로 생성될 인스턴스를 가르키는 식별자이다.   
  > this 바인딩은 this와 this의 대상이 되는 인스턴스를 연결해주는 과정이다.
  
 **Extended Parameter Handling**
-함수의 매개변수에 default value를 설정하려면 함수안에서 별도로 설정 해줘야 했지만 
+함수의 매개변수에 default value를 설정하려면 함수안에서 별도로 설정 해줘야 했지만   
 es6에서는 그럴 필요가 없이 매개변수에다가 바로 할당 해 놓으면 된다.(어디서 본 것은 같은데 굉장히 낯설다.) 아래 예시를 보자.
 ```js
 Default Parameter Values
@@ -163,7 +163,7 @@ function f (x, y) {
 };
 f(1, 2, "hello", true, 7) === 9;
 ```
-배열이나 문자열(iterable collection)의 요소들을 문자그대로의 요소나 함수의 개별 매개변수로 분산시키는 것이 가능하게 되었다. 
+배열이나 문자열(iterable collection)의 요소들을 문자그대로의 요소나 함수의 개별 매개변수로 분산시키는 것이 가능하게 되었다.   
 문장으로 적으면 복잡해 보이지만 예시로 보면 오히려 쉽다. 
 ```js
 Spread Operator
@@ -194,11 +194,11 @@ var str = "foo";
 var chars = str.split(""); // [ "f", "o", "o" ]
 ```
 **Template Literals**
-문자열에 대하여 조금더 직관적인 표현이 가능하게 해주는 Template Literal의 등장
+문자열에 대하여 조금더 직관적인 표현이 가능하게 해주는 Template Literal의 등장  
 Template Literal은 `${}`(${}안에)자바스크립트 표현식을 사용가능하게 했다.
 
 **Extended Literals**
-2진수와 8진수를 parseInt()함수의 도움없이 바로 사용할 수 있게끔 했다. 
+2진수와 8진수를 parseInt()함수의 도움없이 바로 사용할 수 있게끔 했다.   
 이로 인해서 Octal Error가 strict 모드에서 발생하게 되었는데 관련자료는 아래와 같다. 
 
 [Octal Error 관련 TIL](https://bedeveloper.tistory.com/80)
@@ -271,7 +271,7 @@ obj = {
 
 **Classes**
 
-class를 통해 객체 정의하고 이 객체를 new 키워드를 통해 생성을 할 수 있게 되었다.
+class를 통해 객체 정의하고 이 객체를 new 키워드를 통해 생성을 할 수 있게 되었다.  
 
 (ECMA에서 설명하기로는 객체지향스타일로 상용구 없이 class를 정의할 수 있게 되었다고 표현한다.)
 ```js
@@ -299,13 +299,13 @@ Shape.prototype.move = function (x, y) {
     this.y = y;
 };
 ```
-extends, constructor, super를 통해 상용구 없이 객체의 속성과 메소드의 상속이 가능해 졌다.
+extends, constructor, super를 통해 상용구 없이 객체의 속성과 메소드의 상속이 가능해 졌다.  
 
 참고로 mdn에서 extends, constructor, super는 아래와 같이 표현된다. 
 
-> The extends keyword is used in class declarations or class expressions to create a class as a child of another class.
-> The constructor method is a special method of a class for creating and initializing an object of that class.
-> The super keyword is used to access and call functions on an object's parent.(this keyword를 쓰려면 반드시 contructor안에서 super가 사용되어야한다. )
+> The extends keyword is used in class declarations or class expressions to create a class as a child of another class.  
+> The constructor method is a special method of a class for creating and initializing an object of that class.  
+> The super keyword is used to access and call functions on an object's parent.(this keyword를 쓰려면 반드시 contructor안에서 super가 사용되어야한다. )  
 
 예시는 아래와 같다. 
 ```js
