@@ -71,3 +71,287 @@ callstack에 넣어주어서 메세지(콜백함수)가 실행되게 하는 것.
 (콜백함수가 호출되면 값을 반환하고 스택을 비우게 된다.)
 
 [event loop관련 TIL](https://bedeveloper.tistory.com/86)
+
+## 기존 자바스크립트와 ES6의 차이점 및 특징
+
+**Constants**
+ 다시 할당할 수 없는 변수 const의 추가
+ 
+**Scoping** 
+블록{}범위 변수 let, const의 추가
+기존 함수의 스코프를 블록{}범위 함수로 변경
+```js
+//es6 => 하지만 블록{}으로만 감싸주어도 지역스코프의 함수로 선언 가능
+{
+    function foo () { return 1 }
+    foo() === 1
+    {
+        function foo () { return 2 }
+        foo() === 2
+    }
+    foo() === 1
+}
+
+// es5 => 지역스코프의 함수로 선언하기 위해 ()로 감싸고 호출하는 코드를 작성해야 됬었다.
+(function () {
+    var foo = function () { return 1; }
+    foo() === 1;
+    (function () {
+        var foo = function () { return 2; }
+        foo() === 2;
+    })();
+    foo() === 1;
+})();
+```
+**Arrow Functions**
+화살표 함수의 추가로 훨씬 더 가독성이 올라가게 되었다.
+```js
+//es6
+odds  = evens.map(v => v + 1)
+pairs = evens.map(v => ({ even: v, odd: v + 1 }))
+nums  = evens.map((v, i) => v + i)
+
+//es5
+odds  = evens.map(function (v) { return v + 1; });
+pairs = evens.map(function (v) { return { even: v, odd: v + 1 }; });
+nums  = evens.map(function (v, i) { return v + i; });
+```
+**화살표 함수는 lexical this를 따른다. => 이게 무슨 말인지 추가 조사 필요**
+ > 참고 this란?
+ > javascript에서 this란 생성자 함수안에서 앞으로 생성될 인스턴스를 가르키는 식별자이다. 
+ > this 바인딩은 this와 this의 대상이 되는 인스턴스를 연결해주는 과정이다.
+ 
+**Extended Parameter Handling**
+함수의 매개변수에 default value를 설정하려면 함수안에서 별도로 설정 해줘야 했지만 
+es6에서는 그럴 필요가 없이 매개변수에다가 바로 할당 해 놓으면 된다.(어디서 본 것은 같은데 굉장히 낯설다.) 아래 예시를 보자.
+```js
+Default Parameter Values
+
+//es6 
+function f (x, y = 7, z = 42) {
+    return x + y + z
+}
+f(1) === 50
+
+//es5
+function f (x, y, z) {
+    if (y === undefined)
+        y = 7;
+        // var y = y || 7 로도 쓸 수 있다.
+    if (z === undefined)
+        z = 42;
+        // var z = z || 42 로도 쓸 수 있다.
+    return x + y + z;
+};
+f(1) === 50;
+```
+단일 매개변수로 나머지 인자를 다룰 수 있다.
+```js
+Rest Parameter
+
+//es6
+function f (x, y, ...a) {
+    return (x + y) * a.length
+}
+f(1, 2, "hello", true, 7) === 9
+
+//es5
+function f (x, y) {
+    var a = Array.prototype.slice.call(arguments, 2);
+    //Rest Parameter 보다 위의 내용이 더 새로워 보인다.
+    return (x + y) * a.length;
+};
+f(1, 2, "hello", true, 7) === 9;
+```
+배열이나 문자열(iterable collection)의 요소들을 문자그대로의 요소나 함수의 개별 매개변수로 분산시키는 것이 가능하게 되었다. 
+문장으로 적으면 복잡해 보이지만 예시로 보면 오히려 쉽다. 
+```js
+Spread Operator
+
+//es6
+var params = [ "hello", true, 7 ]
+var other = [ 1, 2, ...params ] // [ 1, 2, "hello", true, 7 ]
+
+function f (x, y, ...a) {
+    return (x + y) * a.length
+}
+f(1, 2, ...params) === 9
+
+var str = "foo"
+var chars = [ ...str ] // [ "f", "o", "o" ]
+
+//es5
+var params = [ "hello", true, 7 ];
+var other = [ 1, 2 ].concat(params); // [ 1, 2, "hello", true, 7 ]
+
+function f (x, y) {
+    var a = Array.prototype.slice.call(arguments, 2);
+    return (x + y) * a.length;
+};
+f.apply(undefined, [ 1, 2 ].concat(params)) === 9;
+
+var str = "foo";
+var chars = str.split(""); // [ "f", "o", "o" ]
+```
+**Template Literals**
+문자열에 대하여 조금더 직관적인 표현이 가능하게 해주는 Template Literal의 등장
+Template Literal은 `${}`(${}안에)자바스크립트 표현식을 사용가능하게 했다.
+
+**Extended Literals**
+2진수와 8진수를 parseInt()함수의 도움없이 바로 사용할 수 있게끔 했다. 
+이로 인해서 Octal Error가 strict 모드에서 발생하게 되었는데 관련자료는 아래와 같다. 
+
+[Octal Error 관련 TIL](https://bedeveloper.tistory.com/80)
+
+```js
+//es6
+0b111110111 === 503
+0o767 === 503
+
+//es5
+parseInt("111110111", 2) === 503;
+parseInt("767", 8) === 503;
+```
+
+**Enhanced Object Properties**
+
+객체에서 속성과 값이 같을 경우 줄여서 쓸 수 있다.
+
+Property Shorthand
+```js
+//es6
+var x = 0, y = 0
+obj = { x, y }
+
+//es5
+var x = 0, y = 0;
+obj = { x: x, y: y };
+```
+또한 속성 이름을 객체 안에서 계산되어 정의될 수 있도록 하였다.(처음 보는 듯 하다.)
+```js
+//es6
+let obj = {
+    foo: "bar",
+    [ "baz" + quux() ]: 42
+}
+
+//es5
+var obj = {
+    foo: "bar"
+};
+obj[ "baz" + quux() ] = 42;
+```
+일반 함수와 생성자 함수 모두 객체의 속성 정의 시 메서드 표기법을 지원하게 되었다. 
+```js
+//es6
+obj = {
+    foo (a, b) {
+        …
+    },
+    bar (x, y) {
+        …
+    },
+    *quux (x, y) {
+        …
+    }
+}
+
+//es5
+obj = {
+    foo: function (a, b) {
+        …
+    },
+    bar: function (x, y) {
+        …
+    },
+    //  quux: no equivalent in ES5 => 생성자 함수가 ES5에는 없다.
+    …
+};
+```
+
+**Classes**
+
+class를 통해 객체 정의하고 이 객체를 new 키워드를 통해 생성을 할 수 있게 되었다.
+
+(ECMA에서 설명하기로는 객체지향스타일로 상용구 없이 class를 정의할 수 있게 되었다고 표현한다.)
+```js
+//es6
+
+class Shape {
+    constructor (id, x, y) {
+        this.id = id
+        this.move(x, y)
+    }
+    move (x, y) {
+        this.x = x
+        this.y = y
+    }
+}
+
+//es5
+
+var Shape = function (id, x, y) {
+    this.id = id;
+    this.move(x, y);
+};
+Shape.prototype.move = function (x, y) {
+    this.x = x;
+    this.y = y;
+};
+```
+extends, constructor, super를 통해 상용구 없이 객체의 속성과 메소드의 상속이 가능해 졌다.
+
+참고로 mdn에서 extends, constructor, super는 아래와 같이 표현된다. 
+
+> The extends keyword is used in class declarations or class expressions to create a class as a child of another class.
+> The constructor method is a special method of a class for creating and initializing an object of that class.
+> The super keyword is used to access and call functions on an object's parent.(this keyword를 쓰려면 반드시 contructor안에서 super가 사용되어야한다. )
+
+예시는 아래와 같다. 
+```js
+//es6
+
+class Rectangle extends Shape {
+    constructor (id, x, y, width, height) {
+        super(id, x, y)
+        this.width  = width
+        this.height = height
+    }
+}
+class Circle extends Shape {
+    constructor (id, x, y, radius) {
+        super(id, x, y)
+        this.radius = radius
+    }
+}
+
+//es5
+
+var Rectangle = function (id, x, y, width, height) {
+    Shape.call(this, id, x, y);
+    this.width  = width;
+    this.height = height;
+};
+Rectangle.prototype = Object.create(Shape.prototype);
+Rectangle.prototype.constructor = Rectangle;
+var Circle = function (id, x, y, radius) {
+    Shape.call(this, id, x, y);
+    this.radius = radius;
+};
+Circle.prototype = Object.create(Shape.prototype);
+Circle.prototype.constructor = Circle;
+```
+---
+> 오늘 다루지 못한 부분은 내일 정리 하도록하겠다. 
+Destructuring Assignment
+Modules
+Symbol Type
+Iterators
+Generators
+Map/Set & WeakMap/WeakSet
+Typed Arrays
+New Built-In Methods
+Promises
+Meta-Programming
+Internationalization & Localization
+```
