@@ -341,9 +341,49 @@ var Circle = function (id, x, y, radius) {
 Circle.prototype = Object.create(Shape.prototype);
 Circle.prototype.constructor = Circle;
 ```
+
+**Destructuring Assignment**
+유용한 구조분해할당 또한 es6에서 등장하게 되었는데  
+  
+배열을 개별 변수로 직관적이고 유연하게 분해할 수 있게 도와준다.   
+  
+Swapping variables 변수 교환 역시 하나의 구조 분해 할당 식에서 가능하게 되었다고 한다.  
+(구조분해할당이 없었으면 두값을 교환하기 위해 임시 변수가 필요했다고 한다.)  
+아래 예시를 보면 이해하기 쉬울 것이다.   
+
+```js
+Array Matching & Swapping variables
+
+//es6
+var list = [ 1, 2, 3 ]
+var [ a, , b ] = list
+[ b, a ] = [ a, b ]
+console.log(a) // 3
+console.log(b) // 1
+
+//es5
+var list = [ 1, 2, 3 ];
+var a = list[0], b = list[2];
+var tmp = a; a = b; b = tmp;
+```
+객체를 개별 변수로 직관적이고 유연하게 분해할 수 있게 도와준다. 
+```js
+Object Matching, Shorthand
+
+//es6
+var { op, lhs, rhs } = getASTNode()
+
+//es5
+var tmp = getASTNode();
+var op  = tmp.op;
+var lhs = tmp.lhs;
+var rhs = tmp.rhs;
+
+//코드가 얼마나 짧아지는지 예시를 보면 알 수 있다.
+```
+
 ---
 > 오늘 다루지 못한 부분은 내일 정리 하도록하겠다. 
-Destructuring Assignment
 Modules
 Symbol Type
 Iterators
