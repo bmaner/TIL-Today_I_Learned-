@@ -342,13 +342,13 @@ Circle.prototype = Object.create(Shape.prototype);
 Circle.prototype.constructor = Circle;
 ```
 
-**Destructuring Assignment**
+**Destructuring Assignment**  
 유용한 구조분해할당 또한 es6에서 등장하게 되었는데  
   
 배열을 개별 변수로 직관적이고 유연하게 분해할 수 있게 도와준다.   
   
 Swapping variables 변수 교환 역시 하나의 구조 분해 할당 식에서 가능하게 되었다고 한다.  
-(구조분해할당이 없었으면 두값을 교환하기 위해 임시 변수가 필요했다고 한다.)  
+(구조분해할당이 없었으면 두값을 교환하기 위해 임시 변수가 필요했다.)  
 아래 예시를 보면 이해하기 쉬울 것이다.   
 
 ```js
@@ -381,7 +381,37 @@ var rhs = tmp.rhs;
 
 //코드가 얼마나 짧아지는지 예시를 보면 알 수 있다.
 ```
+중첩된 객체 또한 개별 변수로 직관적이고 유연하게 구조화가 가능하다.(이부분 또한 처음 알게된 사실)
+```js
+Object Matching, Deep Matching
 
+//es6
+var  { op: a ,  lhs: { op: b } , rhs: c } = getASTNode ( )
+
+//es5
+var tmp = getASTNode ( ) ; 
+변수 a = tmp . op ; 
+var  b = tmp . 좌 . op ; 
+var c = tmp . rhs ;
+```
+구조분해할당에서도 기본값 설정이 가능하다.
+```js
+Object and Array Matching, Default Values
+
+//es6
+var obj = { a: 1 }
+var list = [ 1 ]
+var { a, b = 2 } = obj
+var [ x, y = 2 ] = list
+
+//es5
+var obj = { a: 1 };
+var list = [ 1 ];
+var a = obj.a;
+var b = obj.b === undefined ? 2 : obj.b;
+var x = list[0];
+var y = list[1] === undefined ? 2 : list[1];
+```
 ---
 > 오늘 다루지 못한 부분은 내일 정리 하도록하겠다. 
 Modules
