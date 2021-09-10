@@ -341,7 +341,68 @@ var Circle = function (id, x, y, radius) {
 Circle.prototype = Object.create(Shape.prototype);
 Circle.prototype.constructor = Circle;
 ```
+static 키워드는 클래스의 정적 메서드를 정의한다.  
 
+정적 메서드는 클래스의 인스턴스 없이 호출이 가능하며 클래스가 인스턴스화되면 호출할 수 없다.   
+
+출처: https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes/static  
+```js
+Static Members
+
+//es6
+class Rectangle extends Shape {
+    …
+    static defaultRectangle () {
+        return new Rectangle("default", 0, 0, 100, 100)
+    }
+}
+class Circle extends Shape {
+    …
+    static defaultCircle () {
+        return new Circle("default", 0, 0, 100)
+    }
+}
+var defRectangle = Rectangle.defaultRectangle()
+var defCircle    = Circle.defaultCircle()
+```
+Getter와 Setter가 원래는 prototype안에서만 사용이 가능했는데 이제는 class안에서도 직접적으로 사용할 수 있게 되었다.   
+
+여기서 getter와 setter를 알지 못하기에 짚고 넘어가려고 한다.   
+
+출처: https://ko.javascript.info/property-accessors  
+
+get은 인수가 없는 함수로, 프로퍼티를 읽을 때 동작하고  
+
+set은 인수가 하나인 함수로, 프로퍼티에 값을 쓸 때 호출된다. 값이 매개변수로 오게 되는데 예시를 보면 이해하기 쉽다.  
+```js
+let user = {
+  name: "John",
+  surname: "Smith",
+
+  get fullName() {
+    return `${this.name} ${this.surname}`;
+  }
+};
+
+alert(user.fullName); // John Smith
+
+//get과 set을 접근자 프로퍼티(accessor property)라고 부르는데 
+//get으로 함수를 지정한 경우에는 객체 밖에서 일반 프로퍼티처럼 접근할 수 있게 된다. 
+//기 정의한 것 처럼 프로퍼티를 읽을 때 실행 된다.
+
+let user = {
+  set fullName(value) {
+    [this.name, this.surname] = value.split(" ");
+  }
+};
+
+user.fullName = "Alice Cooper";
+
+alert(user.name); // Alice
+alert(user.surname); // Cooper
+
+// set은 인수가 하나인 함수로, 프로퍼티에 값을 할당 할 때 호출된다.
+```
 **Destructuring Assignment**  
 유용한 구조분해할당 또한 es6에서 등장하게 되었는데  
   
@@ -412,9 +473,146 @@ var b = obj.b === undefined ? 2 : obj.b;
 var x = list[0];
 var y = list[1] === undefined ? 2 : list[1];
 ```
+함수의 호출 중에 배열과 객체를 개별 매개변수로 직관적이고 유연하게 구조화 할 수 있다.   
+
+이 부분은 react에서 부모 component가 자식 component로 props를 넘겨줄때 자주 보았다.   
+```js
+Parameter Context Matching
+
+//es6
+function f ([ name, val ]) {
+    console.log(name, val)
+}
+function g ({ name: n, val: v }) {
+    console.log(n, v)
+}
+function h ({ name, val }) {
+    console.log(name, val)
+}
+f([ "bar", 42 ])
+g({ name: "foo", val:  7 })
+h({ name: "bar", val: 42 })
+
+//es5
+function f (arg) {
+    var name = arg[0];
+    var val  = arg[1];
+    console.log(name, val);
+};
+function g (arg) {
+    var n = arg.name;
+    var v = arg.val;
+    console.log(n, v);
+};
+function h (arg) {
+    var name = arg.name;
+    var val  = arg.val;
+    console.log(name, val);
+};
+f([ "bar", 42 ]);
+g({ name: "foo", val:  7 });
+h({ name: "bar", val: 42 });
+```
+선택적으로 기본값이 있는 Fail-soft 구조분해가 가능하다.   
+
+> fail-soft가 무슨 말인가?
+> Destructuring is also fail-soft, meaning that values not found return undefined instead of an error
+> 즉, value가 찾아지지 않을때 error대신에 undefined를 반환하는 것을 말한다. 
+> 그러고보니 fail-soft '연약한 실패' 용어를 만드는 자바스크립트 개발자들도 재밌다는 생각이 든다. 
+> 출처: https://www.benmvp.com/blog/learning-es6-destructuring/
+```js
+//es6
+var list = [ 7, 42 ]
+var [ a = 1, b = 2, c = 3, d ] = list
+a === 7
+b === 42
+c === 3
+d === undefined
+//list에 0번째, 1번째자리가 정해져있지 않으면 각각 a는 1, b는 2가된다는 말이고 
+//2번째 줄에서 2번째, 3번째에 해당하는 요소가 없기 때문에 c는 3으로 기본값이 정해지고,
+//d의 경우는 3번째 줄에서도 정의되지 않았기에 undefined가 되는 것이다.
+//fail-soft의 개념으로 다시 설명하자면 d의 경우 해당하는 값이 없기 때문에 error 대신 undefined를 반환하는 것이다. 
+
+//es5
+var list = [ 7, 42 ];
+var a = typeof list[0] !== "undefined" ? list[0] : 1;
+var b = typeof list[1] !== "undefined" ? list[1] : 2;
+var c = typeof list[2] !== "undefined" ? list[2] : 3;
+var d = typeof list[3] !== "undefined" ? list[3] : undefined;
+a === 7;
+b === 42;
+c === 3;
+d === undefined;
+```
+**Modules**
+
+namespace pollution없이 모듈에서 값 내보내기/가져오기를 지원한다.  
+
+(개인적으로는 전역 스코프에 선언되지 않아서 충돌의 위험이 없다라고 해석을 했습니다. )  
+
+> namespace pollution이 무슨 말인가?
+> It means that something is misplaced. In programming that means that code that should really live in separate namespaces is added to a common namespace (in some cases the global namespace).
+> 뭔가 잘못된 위치에 있는 것을 의미하며 별도의 네임스페이스에 있어야하는 코드가 공통 네임스페이스에 있는 것을 의미한다. 
+> Basically, namespaces' main function is to categorize code, and both static and non static code must be defined in a namespace somewhere.
+> 네임스페이스이 주요기능은 코드를 분류하는 것이며 어떤 코드(정적, 비정적 코드)든 네임스페이스 어딘가에 정의되어 있어야 한다.
+> 출처: https://stackoverflow.com/questions/22903542/what-is-namespace-pollution
+
+> namespace란?
+> The namespace axis indicates all the nodes that are in scope for the context node. In this case, the context node must be an element node.
+> 출처 : https://developer.mozilla.org/ko/docs/Web/XPath/Axes/namespace
+
+> 즉, 종합하자면 JavaScript는 함수 오버로딩을 지원하지 않기에 동일한 이름을 가진 두 함수가 사용되면 함수가 로드되는 순서에 따라 한 함수가 다른 함수를 재정의 하게 된다.(충돌) 
+> namespace pollution은 이러한 충돌의 원인이 되기에 전역 네임스페이스에 모든 것을 추가하지 않도록 주의해야한다라는 것.
+> (네임스페이스를 scope라고 이해하고 이를 바탕으로 모든 글들을 읽었습니다. 다른 분들은 어떻게 해석하실런지 궁금하네요! 아시면 댓글 부탁드립니다.)
+
+> namespace pollution에 대한 예시와 좋은 해결방법을 제시하는 reference :
+> https://www.tutorialspoint.com/how-to-avoid-namespace-pollution-in-javascript
+
+```js
+//es6
+//  lib/math.js
+export function sum (x, y) { return x + y }
+export var pi = 3.141593
+
+//  someApp.js
+import * as math from "lib/math"
+console.log("2π = " + math.sum(math.pi, math.pi))
+
+//  otherApp.js
+import { sum, pi } from "lib/math"
+console.log("2π = " + sum(pi, pi))
+
+//es5
+//  lib/math.js
+LibMath = {};
+LibMath.sum = function (x, y) { return x + y };
+LibMath.pi = 3.141593;
+
+//  someApp.js
+var math = LibMath;
+console.log("2π = " + math.sum(math.pi, math.pi));
+
+//  otherApp.js
+var sum = LibMath.sum, pi = LibMath.pi;
+console.log("2π = " + sum(pi, pi));
+```
+기본으로 export되는 것을 표시할 수 있고 다른 값들을 혼합하여 표시 할 수 있다. 
+
+```js
+Default & Wildcard
+
+//es6
+//  lib/mathplusplus.js
+export * from "lib/math"
+export var e = 2.71828182846
+export default (x) => Math.exp(x)
+
+//  someApp.js
+import exp, { pi, e } from "lib/mathplusplus"
+console.log("e^{π} = " + exp(pi))
+```
 ---
 > 오늘 다루지 못한 부분은 내일 정리 하도록하겠다. 
-Modules
 Symbol Type
 Iterators
 Generators
