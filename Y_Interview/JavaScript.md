@@ -611,15 +611,88 @@ export default (x) => Math.exp(x)
 import exp, { pi, e } from "lib/mathplusplus"
 console.log("e^{π} = " + exp(pi))
 ```
----
-> 오늘 다루지 못한 부분은 내일 정리 하도록하겠다. 
-Symbol Type
-Iterators
-Generators
-Map/Set & WeakMap/WeakSet
-Typed Arrays
-New Built-In Methods
-Promises
-Meta-Programming
-Internationalization & Localization
+**Symbol Type**
+
+객체 속성의 식별자로 사용될 수 있는 고유하고 변경할 수 없는 데이터 형식(원시 데이터 형의 일종)이 추가되었다,  
+
+Symbol은 디버깅 목적으로만 사용된다.  
+```js
+Symbol("foo") !== Symbol("foo")
+const foo = Symbol()
+const bar = Symbol()
+typeof foo === "symbol"
+typeof bar === "symbol"
+let obj = {}
+obj[foo] = "foo"
+obj[bar] = "bar"
+JSON.stringify(obj) // {}
+Object.keys(obj) // []
+Object.getOwnPropertyNames(obj) // []
+Object.getOwnPropertySymbols(obj) // [ foo, bar ]
 ```
+위의 설명을 읽어도 이해가 안되고 왜 써야하는지 납득이 되지 않아서 조금 더 조사를 했다.  
+
+Symbol()로 호출 할 때마다 다른 모든 기호와 다른 새로운 고유한 기호를 얻게 된다고 한다.  
+
+Symbol()에 매개변수를 전달할 수 있고 Symbol()의 기호 설명으로 사용할 수 있다고한다.   
+
+Symbol은 객체의 key로 사용될 수 있다. 그러나 getOwnPropertynames, for in 같은 메소드로는 접근할 수 없고  
+getOwnPropertySymbols()를 통해서만 Symbol로 된 key에 접근할 수 있다.  
+
+> 다른 것과 같은 기호가 없이 때문에 종종 속성 간의 이름 충돌을 피하기 위해  
+> 혹은 사용자가 의도적으로든 인지하지 않고든 덮어쓸 수 없는 속성을 추가하기 위해 사용한다고 한다.   
+> 쉽게 말하자면 실수로(이미 있는 메서드를 인식하지 못하고 같은 이름의 메소드를 추가하는)   
+> 존재하는 객체의 key값이 변경될 수 있으므로 symbol을 통하여 유일한 값을 정의해 추가한다면 만약의 상황을 대비할 수 있는 것이다.  
+
+**Iterators**
+
+객체에서 반복 동작을 사용자가 지정할 수 있도록 iterable 프로토콜을 지원한다.   
+또한 값 시퀀스(유한 또는 무한)를 생성하기 위해 iterator 프로토콜을 지원한다.   
+마지막으로, 반복 가능한 개체의 모든 값에 대해 반복할 수 있는 연산자를(for ~ of) 편리하게 제공한다.  
+
+> iterable이란 반복 가능한 객체이고 Symbol.iterator 속성에 특별한 형태의 함수가 들어있다.  
+> 즉 객체의 Symbol.iterator속성에 특정 형태의 함수가 들어있으면,  
+> 이를 Iterable이라고 부르는 것이고 해당 객체는 iterable protocol을 만족한다고 말한다.  
+> iterable 객체를 만들어내는 생성자에는 다음과 같은 종류가 있다.  
+> - String  
+> - Array  
+> - TypedArray  
+> - Map  
+> - Set  
+> 어떤 객체가 iterable이면 for ~ of, spread연산자, 구조분해할당을 사용할 수 있다.  
+> 출처: https://helloworldjavascript.net/pages/260-iteration.html  
+
+> Iterable protocol을 만족하려면, Symbol.iterator 속성에 저장되어 있는 함수는 iterator 객체를 반환해야 한다.  
+> Iterator 객체는 다음과 같은 특징이 있다.  
+> - Iterator는 next라는 메소드를 갖는다.  
+> - next 메소드는 다음 두 속성을 갖는 객체를 반환한다.  
+>   - value : 현재 순서의 값을 나타냄  
+>   - done : 반복이 모두 끝났는지를 나타냄  
+> 위 조건을 iterator protocol이라고 한다.  
+> 출처: https://helloworldjavascript.net/pages/260-iteration.html   
+> 어떤 객체든 iterable protocol을 구현하기만 하면 iterable이 될 수 있고, 
+> 이 iterable을 만드는 방법에는 generator 함수를 이용하는 방법(Generators에서 소개)과 next메소드 안에서 return(done과 value)을 지정해주는 방법이 있다.  
+> 여기서는 generator가 아닌 next메소드 안에서 return을 지정해주는 방법으로 한번 예시를 들어보겠다.  
+```js
+//es6
+
+let fibonacci = {
+    [Symbol.iterator]() {
+        let pre = 0, cur = 1
+        return {
+           next () {
+               [ pre, cur ] = [ cur, pre + cur ]
+               return { done: false, value: cur }
+           }
+        }
+    }
+}
+
+for (let n of fibonacci) {
+    if (n > 1000)
+        break
+    console.log(n)
+}
+```
+---
+Generators, Map/Set, Typed Arrays, New Built-In Methods, Promises, Meta-Programming, Internationalization & Localization
