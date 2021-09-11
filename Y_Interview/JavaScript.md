@@ -116,7 +116,7 @@ odds  = evens.map(function (v) { return v + 1; });
 pairs = evens.map(function (v) { return { even: v, odd: v + 1 }; });
 nums  = evens.map(function (v, i) { return v + i; });
 ```
-**화살표 함수는 lexical this를 따른다. => 이게 무슨 말인지 추가 조사 필요**
+**화살표 함수는 lexical this를 따른다. => 화살표 함수는 (한번쓰고 버리는게 화살표함수)본인이 가지고 있는 this가 없다. 화살표 함수외에 다른 함수는 this가 있어서 참조할 수 있는데.  그렇다면 화살표함수안에서 this를 찍으면 무엇을 참조할까? 상위 scope의 this를 참조한다. lexical의 의미가 내가 속한 scope가 참조하는 상위 scope. 그러므로 화살표 함수는 lexical this를 따른다.** 
  > 참고 this란?
  > javascript에서 this란 생성자 함수안에서 앞으로 생성될 인스턴스를 가르키는 식별자이다.   
  > this 바인딩은 this와 this의 대상이 되는 인스턴스를 연결해주는 과정이다.
