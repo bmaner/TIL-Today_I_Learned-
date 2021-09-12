@@ -694,5 +694,170 @@ for (let n of fibonacci) {
     console.log(n)
 }
 ```
+**Generators**
+위 Iterator를 다루면서 Iterable 객체를 위한 방법으로 Generator를 잠시 언급했었다.  
+  
+Iterable을 생성하기 위해서는 Iterable protocol을 만족해야하고,  
+Iterable protocol을 만족하기 위해서는 객체의 Symbol.Iterator속성에 특별한 함수가 있어야 한다.  
+Generator 함수를 호출하면 객체가 생성되는데, 이 객체는 iterable protocol을 만족한다. 즉, Symbol.iterator 속성을 갖고 있다.   
+  
+Generator 함수 안에서는 yield라는 특별한 키워드를 사용할 수 있다. Generator 함수 안에서 yield 키워드는 return과 유사한 역할을 하며, iterable의 기능을 사용할 때 yield 키워드 뒤에 있는 값들을 순서대로 넘겨준다.  
+  
+출처: https://helloworldjavascript.net/pages/260-iteration.html  
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FTzT5O%2FbtreJR3FG18%2FvPeUhGc1LSMcdLTRIVks01%2Fimg.png"  width="500" height="300">
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FvcuzA%2FbtreJiOe3n2%2F9xS4yPxHzcHjw86pv3kNvK%2Fimg.jpg"  width="500" height="300">
+
+**Map/Set**
+
+Map은 값들을 매핑하기 위한 새로운 데이터 구조로 간단한 키와 값을 서로 연결시켜 저장하며  
+저장된 순서대로 각 요소들을 반복적으로 접근할 수 있도록 한다.   
+  
+for ~ of로 Map객체에 저장되어 있는 각 요소들을 [키, 값]형태의 배열로 반복적으로 반환해줄 수 있다.  
+```js
+var sayings = new Map();
+sayings.set("dog", "woof");
+sayings.set("cat", "meow");
+sayings.set("elephant", "toot");
+sayings.size; // 3
+sayings.get("fox"); // undefined
+sayings.has("bird"); // false
+sayings.delete("dog");
+
+for (var [key, value] of sayings) {
+  console.log(key + " goes " + value);
+}
+// "cat goes meow"
+// "elephant goes toot"
+```
+Set은 수학에서의 집합과 같은 개념으로 중복되지 않는 요소들이 모이는 data-structure이다.  
+  
+Set의 특징은 예시를 보면서 살펴보자.  
+```js
+let s = new Set()
+s.add("hello").add("goodbye").add("hello") 
+s.size === 2 //동일한 값을 여러번 넣어도 값이 추가되지 않는다.(치환된다)
+s.has("hello") === true //has로 고유값의 존재 여부를 확인이 가능하다.
+for (let key of s.values()) // insertion order
+    console.log(key)
+```
+set은 고유값을 얻어야 할 때, 빠르게 Look up을 해야 할 때, 순서가 상관없을 때 사용해야 한다.   
+  
+**Typed Arrays**  
+네트워크 프로토콜, 암호화 알고리즘, 파일 형식 조작 등을 구현하기 위한 임의의 바이트 기반 데이터 구조 지원  
+  
+**New Built-In Methods**  
+```js
+Object.assign(dest, src1, src2)
+
+[ 1, 3, 4, 2 ].find(x => x > 3) // 4
+[ 1, 3, 4, 2 ].findIndex(x => x > 3) // 2
+
+"foo".repeat(3)
+
+"hello".startsWith("ello", 1) // true
+
+"hello".endsWith("hell", 4) // true
+
+"hello".includes("ell") // true
+
+Number.isNaN(NaN) === true
+
+Number.isFinite(Infinity) === false
+
+Number.isSafeInteger(42) === true
+
+Number.isSafeInteger(9007199254740992) === false
+
+console.log(0.1 + 0.2 === 0.3) // false ???
+
+console.log(Math.abs((0.1 + 0.2) - 0.3) < Number.EPSILON) ???
+
+console.log(Math.trunc(42.7)) // 42 정수 부분으로 자르고 소수 부분을 완전히 삭제 
+
+console.log(Math.trunc( 0.1)) // 0
+
+console.log(Math.trunc(-0.1)) // -0
+
+console.log(Math.sign(7)) // 1 어떤 수의 부호를 반환
+
+console.log(Math.sign(0)) // 0
+
+console.log(Math.sign(-0)) // -0
+
+console.log(Math.sign(-7)) // -1
+
+console.log(Math.sign(NaN)) // NaN
+```
+> Number.EPSILON 속성(property)은 Number 형으로 표현될 수 있는 1과 1보다 큰 값 중에서 가장 작은 값의, 차입니다.  
+  
+**Promises**    
+> Promise는 프로미스가 생성될 때 꼭 알 수 있지는 않은 값을 위한 대리자로, 비동기 연산이 종료된 이후의 결과값이나 실패 이유를 처리하기 위한 처리기를 연결할 수 있도록 합니다. 프로미스를 사용하면 비동기 메서드에서 마치 동기 메서드처럼 값을 반환할 수 있습니다. 다만 최종 결과를 반환하지는 않고, 대신 프로미스를 반환해서 미래의 어떤 시점에 결과를 제공합니다.
+> Promise.all(iterable)
+iterable 내의 모든 프로미스가 이행한 뒤 이행하고, 어떤 프로미스가 거부하면 즉시 거부하는 프로미스를 반환합니다. 반환된 프로미스가 이행하는 경우 iterable 내의 프로미스가 결정한 값을 모은 배열이 이행 값입니다. 반환된 프로미스가 거부하는 경우 iterable 내의 거부한 프로미스의 이유를 그대로 사용합니다. 이 메서드는 여러 프로미스의 결과를 모을 때 유용합니다.
+
+**Meta-Programming**  
+  
+Proxy 객체는 기본적인 동작(속성 접근, 할당, 순회, 열거, 함수 호출 등)의 새로운 행동을 정의할 때 사용한다.  
+```js
+let target = {
+    foo: "Welcome, foo"
+}
+let proxy = new Proxy(target, {
+    get (receiver, name) {
+        console.log('receiver', receiver)
+        console.log('name', name)
+        return name in receiver ? receiver[name] : `Hello, ${name}`
+    }
+})
+proxy.foo   === "Welcome, foo"
+proxy.world === "Hello, world"
+//receiver {foo: 'Welcome, foo'}
+//name foo
+//receiver {foo: 'Welcome, foo'}foo: "Welcome, foo"[[Prototype]]: Object
+//name world
+//true
+
+proxy.foo   === "Welcome, foo"
+//true
+
+proxy.world === "Hello, world"
+//true
+```
+receiver의 경우 target 그 자체를 반환했고, name은 proxy 인스턴스의 속성을 반환했다. 
+
+**Internationalization & Localization**  
+Intl 객체는 각 언어에 맞는 문자비교, 숫자, 시간, 날짜비교를 제공하는, ECMAScript 국제화 API다.  
+Intl.Collator콜레이터 생성자. 콜레이터 객체는 각 언어에 맞는 문자열 비교를 가능하게 해준다.  
+```js
+// in German,  "ä" sorts with "a"
+// in Swedish, "ä" sorts after "z"
+var list = [ "ä", "a", "z" ]
+var l10nDE = new Intl.Collator("de")
+var l10nSV = new Intl.Collator("sv")
+l10nDE.compare("ä", "z") === -1
+l10nSV.compare("ä", "z") === +1
+console.log(list.sort(l10nDE.compare)) // [ "a", "ä", "z" ]
+console.log(list.sort(l10nSV.compare)) // [ "a", "z", "ä" ]
+```
+Intl.DateTimeFormat각 언어에 맞는 시간과 날짜 서식을 적용할 수 있는 객체의 생성자.
+```js
+var l10nEN = new Intl.DateTimeFormat("en-US")
+var l10nDE = new Intl.DateTimeFormat("de-DE")
+l10nEN.format(new Date("2015-01-02")) === "1/2/2015"
+l10nDE.format(new Date("2015-01-02")) === "2.1.2015"
+```
+Intl.NumberFormat각 언어에 맞는 숫자 서식을 적용할 수 있는 객체의 생성자.
+```js
+var l10nEN = new Intl.NumberFormat("en-US")
+var l10nDE = new Intl.NumberFormat("de-DE")
+l10nEN.format(1234567.89) === "1,234,567.89"
+l10nDE.format(1234567.89) === "1.234.567,89"
+
+var l10nUSD = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" })
+var l10nGBP = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" })
+var l10nEUR = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" })
+l10nUSD.format(100200300.40) === "$100,200,300.40"
+l10nGBP.format(100200300.40) === "£100,200,300.40"
+l10nEUR.format(100200300.40) === "100.200.300,40 €"
+```
 ---
-Generators, Map/Set, Typed Arrays, New Built-In Methods, Promises, Meta-Programming, Internationalization & Localization
