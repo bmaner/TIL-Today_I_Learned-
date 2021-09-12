@@ -705,7 +705,7 @@ Generator 함수 안에서는 yield라는 특별한 키워드를 사용할 수 �
   
 출처: https://helloworldjavascript.net/pages/260-iteration.html  
 <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FTzT5O%2FbtreJR3FG18%2FvPeUhGc1LSMcdLTRIVks01%2Fimg.png"  width="500" height="300">
-<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FvcuzA%2FbtreJiOe3n2%2F9xS4yPxHzcHjw86pv3kNvK%2Fimg.jpg"  width="500" height="300">
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FvcuzA%2FbtreJiOe3n2%2F9xS4yPxHzcHjw86pv3kNvK%2Fimg.jpg"  width="300" height="120">
 
 **Map/Set**
 
