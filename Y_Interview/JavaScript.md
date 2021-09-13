@@ -860,4 +860,60 @@ l10nUSD.format(100200300.40) === "$100,200,300.40"
 l10nGBP.format(100200300.40) === "£100,200,300.40"
 l10nEUR.format(100200300.40) === "100.200.300,40 €"
 ```
----
+## 모든 자바스크립트 파일을 브라우저에서 한 번에 로딩 할 때의 문제점과 그 해결([번역]How to load JavaScript properly)
+
+> 모든 자바스크립트 파일을 브라우저에서 한 번에 로딩 할 때의 문제점이라는 질문에 대한 답을 찾기 전에 
+> 한 번에 로딩할 때라는 것은 스크립트 파일을 동기적으로 로드 할 때라는 것을 의미한다고 정하겠습니다.
+
+DOM이 구성 되어있지 않은 상태에서 DOM에 접근하는 script를 실행한다면  
+script는 해당 DOM 요소에 접근 할 수 없습니다.   
+  
+(아래의 코드를 보면 스크립트를 읽는 시점에서는 h1은 아직 존재하지 않기 떄문에 console.log는 null을 출력합니다.)   
+```html
+<head> 
+  <script> 
+    console.log(document.querySelector('h1')) 
+  </script> 
+</head>
+<body> 
+  <h1>제목</h1> 
+</body>
+```
+이를 해결하기 위해서 쉽게 body 태그의 맨 끝에서 script를 불러오면 문제가 없지 않을까라고 생각할 수 있지만 이것이 완전한 해결책이 될수는 없습니다. DOM이 준비가 되어 화면은 사용자에게 이미 보여지고 있는 상황이지만 script파일이 크고 무거울 경우 그리고 이를 로드 중 일 경우에 사용자가 페이지와의 상호작용을 시도한다면 페이지가 아무런 반응을 하지 않을 것이고 이는 나쁜 사용자 경험과 유저 이탈로 이어 질 수도 있기 때문입니다.    
+  
+이 문제는 아래와 같은 이유로 발생하게 됩니다.   
+브라우저는 HTML파일을 맨 위에서 아래로 한 줄씩 파싱합니다. 그러다가 스크립트 파일을 마주치는 경우  
+이를 로드하고 실행되는 동안에는 script 아래에 있는 나머지 DOM구성을 차단합니다. 즉 이 문제는 스크립트 파일을 동기적으로 로드하기 때문에 발생하게 되는 것입니다.   
+  
+그렇다면 이를 해결하기 위해서는 스크립트 파일을 비동기로 로드하고 실행해야할 것 입니다.  
+이를위한 script 태그의 두 속성 async와 defer를 소개합니다.    
+
+### async
+```html
+<script src="jquery.js" async></script>
+```
+script 태그의 async 속성은 브라우저가 DOM을 빌드하는 것과 스크립트 로드하는 것을 동시에 처리하도록 합니다. 스크립트 로드가 더 이상 DOM을 구성하는 것을 차단하지 않도록 할 수 있습니다. 
+![image](https://user-images.githubusercontent.com/78008369/133060966-78c3c82f-b4b1-460b-b58c-f33acf4a8fe5.png)
+하지만 스크립트 로드만 DOM 구성을 차단하지 않을 뿐 스크립트가 로드를 완료하는 즉시 스크립트가 실행되고 스크립트가 실행될 때에는 브라우저가 수행하는 모든 작업을 차단합니다.   
+async는 아래와 같은 특징을 가지고 있습니다.  
+- script 로드가 언제 완료될 지, 실행될 지 예측할 수 없다.
+- 그렇기에 script가 완료되어 script가 존재하지 않는 DOM에 접근하여 문제를 발생시킬 수 있다. 
+언제 async를 쓰지 말아야 할까요?  
+- DOM에 접근하는 script가 있을 경우
+- 여러개의 스크립트가 있고 스크립트들이 서로 상호 의존적인 경우
+### defer
+async처럼 defer 또한 script 로드 시에 브라우저를 차단시키지 않습니다. async의 경우 script를 실행 시 브라우저를 차단 시켰지만 defer의 경우 차이점이 있는데요.  
+defer속성이 포함된 script의 경우 DOM의 구성이 끝나고 난 다음에야 실행이 됩니다. 그러므로 defer는 script가 DOM에 접근을 보장하는 이상적인 속성인 것이죠.    
+![image](https://user-images.githubusercontent.com/78008369/133061157-539504cd-ccd8-444b-99ba-5c00e43eea94.png)
+defer는 아래와 같은 특징을 가지고 있습니다. 우선 예시 코드를 먼저 보시죠.    
+```html
+<script src="library.js" defer></script>
+<script src="app.js" defer></script>
+```
+library.js, app.js 둘 다 어떠한 값을 console.log하는 script파일이고, library.js가 app.js보다 훨씬 더 크고 무거운 파일일지라도 library.js의 console.log가 먼저 실행된 후 app.js의 console.log가 실행 됩니다. 이것은 defer 속성이 우리가 지정한 script tag의 순서를 따라서 실행시켜주기 때문입니다.   
+
+언제 defer를 써야할까요?  
+- DOM에 접근하는 모든 script들에 사용하면 좋습니다.(DOM에 대한 접근을 보장하기 때문이죠.)
+- 여러 script들이 있고 이것들의 실행 순서가 script 각각에 영향이 있는 경우
+
+원문 출처 : https://javascript.plainenglish.io/async-and-defer-the-complete-guide-to-loading-javascript-properly-ce6edce1e6b5
