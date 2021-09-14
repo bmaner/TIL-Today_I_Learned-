@@ -54,21 +54,28 @@ callback으로 연쇄적인 비동기를 사용할 경우에는 error 처리를 
 
 ## JavaScript와 Nodejs가 어떻게 다른 것인지 설명해주세요.
 
-자바스크립트는 스크립트 언어로써 동적으로 컨텐츠를 바꾸고, 멀티미디어를 다루는 등 다양한 일을 하기 위해 웹에서 사용되었고 웹브라우저가 없으면 사용할 수 없는 단점이 있습니다.  
+javascript는 웹브라우저를 위한 싱글스레드 비동기 언어이고, node.js는 웹 브라우저 외에서 자바스크립트를 실행할 수 있는 런타임입니다.
 
-웹에서 사용될 수 있었던 이유는 웹브라우저가 자바스크립트를 실행시킬 수 있는 엔진 실행환경을 구축했었기 때문입니다.
+런타임 환경이란 프로그램이 실행되는 곳을 의미하는데 중요한 점은, 런타임 환경이 바로 프로그램이 접근할 수 있는 전역 객체와 작동 방식을 결정한다는 사실이다. 대표적인 JS 런타임은 브라우저와 Node 두 개가 있다.
 
-예를 들면 크롬에는 V8이라는 엔진이 있는 것 처럼 말이죠. 
+브라우저 (Chrome, Firefox 등)
 
-NodeJS는 V8과 libuv를 바탕으로 만들어졌으며 터미널과 같이 웹 이외의 환경에서도 작동되기위해 그리고 다양한 용도로 확장되어 사용되기 위해 만들어진 자바스크립트 런타임입니다. 
+- JS 가 실행되는 가장 보편적인 런타임 환경입니다.
+- 브라우저에는 window 라는 전역객체가 내장되어 있어, JS script 를 통해 window 와 관련된 메서드를 실행할 수 있습니다.
+(예시: window.alert())
+
+Node
+
+- 브라우저 없이도 JS를 실행할 수 있도록 하기 위해 만들어진 런타임 환경입니다.
+- 브라우저와는 전혀 다른 런타임 환경이기 때문에, 브라우저 관련 객체 (window 등) 에는 접근할 수 없습니다.
+- 대신, 서버를 구축할 때 필요한 다른 변수들 (환경변수 등) 에 접근할 수 있도록 설정되어 있습니다.
 
 
 ## JavaScript에서 event loop란 무엇인가요?
 
-event loop는 callstack과 task queue를 주시하며
-callstack이 비어있다면 task queue의 가장 오래된(첫번째) 메세지를
-callstack에 넣어주어서 메세지(콜백함수)가 실행되게 하는 것.(즉 콜백함수가 호출되게 하는 것)
-(콜백함수가 호출되면 값을 반환하고 스택을 비우게 된다.)
+자바스크립트는 싱글스레드입니다.
+
+하지만 멀티스레드처럼 동시에 여러 태스크의 작동이 가능한 것처럼 보입니다. 이는 런타임 환경의 이벤트 루프라는 동작 방식 덕분입니다. 브라우저의 이벤트 루프는 callstack과 task queue를 주시하며 callstack이 비어있다면 task queue의 가장 오래된(첫번째) 메시지를 callstack에 넣어주어서 메세지(콜백함수)가 실행되게 하는 역할을 수행합니다.
 
 [event loop관련 TIL](https://bedeveloper.tistory.com/86)
 
@@ -917,3 +924,89 @@ library.js, app.js 둘 다 어떠한 값을 console.log하는 script파일이고
 - 여러 script들이 있고 이것들의 실행 순서가 script 각각에 영향이 있는 경우
 
 원문 출처 : https://javascript.plainenglish.io/async-and-defer-the-complete-guide-to-loading-javascript-properly-ce6edce1e6b5
+
+## Node.js는 싱글스레드 인가요? Node.js런타임이 동작하는 방식을 설명해주세요.
+**싱글스레드 멀티스레드 여부**   
+  
+**NodeJS 는 기본적으로 libuv의 이벤트 루프를 메인 스레드**로 활용하기 때문에 "싱글 스레드"입니다.  
+  
+그러나 기본 작업 외 특정 작업을 수행할 때, 추가 스레드가 필요한 경우에는 새로운 스레드를 생성하여 실행할 수 있는 Multi-thread 이기도 합니다.  
+  
+**런타임의 동작 방식**  
+  
+Node.js는 V8 자바스크립트 엔진(memory heap과 call stack으로 구성)을 기본으로 동작합니다. 이벤트 루프는 싱글 스레드로 작동하며, libuv 내에서 비동기 작업을 처리합니다. DNS, fs, 해싱, 압축 등의 특정한 작업 호출이 있는 경우, 이를 libuv 내부의 Thread pool을 이용하여 멀티스레드로 처리합니다. 
+  
+NodeJS 의 스레드는 이벤트루프 (메인 스레드) 와 Thread Pool 로 구성되어 있습니다. Thread Pool 은 말 그대로 얼마든지 '향후에 사용 가능한' 비어 있는 스레드들의 그룹입니다. 현재 사용중이지 않지만, 태스크 분배가 가능한 상태의 스레드로 보시면 됩니다.   
+NodeJS 의 경우 별도의 설정을 해주지 않을 경우 이 Thread Pool 의 값이 4로 지정되어 있어, 최대 4개의 추가 스레드를 사용할 수 있습니다. (물론 수동 설정을 통해 늘릴 수 있습니다)
+
+## CORS란?
+**정의**  
+  
+보안 정책, Cross-Origin Resource Sharing 의 약자. 웹 생태계에서 다른 Origin으로의 리소스 요청을 제한하거나 허용하는 것과 관련된 정책  
+  
+**목적**  
+  
+원래는 SOP (Same-origin policy) 가 정석인데 점차 웹에서 다른 출처에 있는 리소스를 가져와서 사용하는 일이 흔해지자, "몇 가지 예외 조항에 해당하는 리소스 요청"에 한해서는 허용해주자는 정책이 바로 CORS 정책  
+- HTTP 통신에서의 더욱 효율적인 소통을 위한 과정  
+- Cross-Origin: url 의 scheme(http), host(domain), port 가 다른 경우  
+CORS 가 작동하는 3가지 방식이다.
+  
+**Simple Requests(간단한 요청)**: 다음 조건들을 만족하는 경우에 해당한다.  
+  
+- GET, HEAD, POST 메서드 요청
+- 자동적으로 설정되는 헤더와 Accept, Accept-Language, Content-Language, Content-Type 만 존재하는 요청
+- Content-Type 가 application/x-www-form-urlencoded, multipart/form-data, text/plain 중 하나에 속하는 요청
+- 간단한 요청의 경우, 서버에서
+  
+```
+Access-Control-Allow-Origin:
+```
+  
+헤더를 추가한 응답을 보낸다.  
+
+**Preflight Requests(사전 요청)**  
+  
+본 요청을 보내기 전에 OPTIONS 헤더를 단 요청을 먼저 보내, 안전성을 확인하는 형태의 요청이다. 이 경우, 실제 POST 요청이 아닌 OPTIONS 요청에 **Access-Control-Request-***  
+  
+요청 헤더에 **withCredentials** 와 같은 헤더가 포함된 경우 쿠키를 동반하게 되어, 서버의 응답에  
+  
+헤더가 포함되며, 이는 서버에게 실제 요청이 전달될 때 수행할 메서드와 기타 내용을 명시해주는 역할을 한다. OPTIONS 메서드는 실제 리소스를 변경할 수 없는 안전한 메서드이다.  
+  
+**Credential Requests(인증을 이용하는 요청)**  
+  
+**Access-Control-Allow-Credentials: true** 헤더가 포함되지 않을 경우 브라우저는 이를 거부하게 된다.  
+
+## REST API?
+
+    **API 란?**  
+
+    Application Programming Interface 의 약자로, 서버가 클라이언트에게 제공하는, 리소스 활용 방법이 담긴 인터페이스이다.  
+  
+    Representational State Transfer API 의 약자이다.  
+  
+    HTTP URI(Uniform Resource Identifier)를 통해 자원(Resource)을 명시하고, HTTP Method를 통해 해당 자원에 대한 CRUD Operation을 적용하는 것을 의미한다.  
+  
+    등장 배경:  
+  
+    **프론트엔드Front-End와 백엔드Back-End가 분리되기 시작**  
+  
+    - 새로운 서비스 개발을 위해 개발작업 진행
+    - JSON 형태로 데이터를 제공하는 API를 제공하자고 동의
+    - RequestMethod(HTTP: GET, POST, PUT, DELETE)와 URL을 이용한 정의
+    - View 영역이 포함되지 않은 서버사이드Server-side 개발을 진행
+  
+    주요 특징:  
+  
+    **행위(Verb) : HTTP Method**  
+  
+    POST, GET, PUT, DELETE 와 같은 메서드이다.  
+  
+    **REST API 는 아키텍쳐 원칙 세트로, 자원(Resource), 행위(Verb : HTTP Method), 그리고 표현(Representation) 으로 구성되어 있다.  **
+  
+    **자원(Resource) : URI**  
+  
+    자원은 서버에 저장되어 있으며, 해당 자원에 접근할 수 있는 uri 가 존재한다. client 는 uri 를 통해 해당 자원을 조작할 수 있다. (create, read, update, delete)  
+  
+    **표현(Representation of Resource)**  
+  
+    Client 가 상태 조작을 요구하는 요청(request)를 보내면 서버는 이에 대한 응답(Representation) 을 보낸다.  
