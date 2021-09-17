@@ -1010,3 +1010,137 @@ Access-Control-Allow-Origin:
     **표현(Representation of Resource)**  
   
     Client 가 상태 조작을 요구하는 요청(request)를 보내면 서버는 이에 대한 응답(Representation) 을 보낸다.  
+
+## prototypes in JavaScript 자바스크립트에서의 프로토타입
+
+### 소개
+- 자바스크립트는 프로토타입 기반 언어이며, 상속을 통한 프로퍼티, 메서드 조회 및 코드 재사용성을 위해 프로토타입을 사용합니다.   
+- 이번 글에서는 프로토타입과 프로토타입 체인, 프로토타입의(을 통한) 상속에 대해 알아보겠습니다.  
+  
+### 프로토타입과 프로토타입 체인
+
+- 자바스크립트에서는 원시타입(numbers, strings, boolean 등)과 참조타입(arrays, object, function) 두가지의 데이터 타입이 있습니다.  
+- 원시타입과 참조타입 둘 다 각각 object로 감싸여져있습니다.
+(Both the primitive and the object types are wrapped by their respective objects.)
+- 숫자는 `Number`로, 문자열은 `String`로, 부울은 `Boolean`으로 래핑됩니다.
+- 배열은 `Array`에 의해, 객체는 `Object`에 의해, 함수는 `Function`에 의해 래핑됩니다.
+- 이런 모든 래핑하는 객체에는 prototype이라는 프로퍼티가 있습니다.
+- 이 프로토타입은 재사용 가능한 모든 속성, 메서드를 포함하는 객체이며 그것의 부모 프로토타입도 가지고 있습니다.
+- 이러한 래핑하는 객체들의 부모는 `Object`라고 불리는 전역 객체입니다. 
+- 프로토타입들에 의해서 서로 연결된 객체들의 체인은 프로토타입 체인이라고 합니다.
+- 예시를 통해 프로토타입 체인을 시각화 해봅시다. 
+![image](https://user-images.githubusercontent.com/78008369/133734966-70621171-ad35-4d26-ac63-e58095a8a89b.png)
+- 이것이 어떻게 코드에서 작동하는지 봅시다.
+- 변수의 프로토타입을 얻기위하여 `Object.getPrototypeOf()`메서드를 사용합니다. 
+```js
+const arr = [1, 2, 3];
+
+const arrWrapperProto = Object.getPrototypeOf(arr);
+
+console.log(arrWrapperProto); // Array
+
+const objectProto = Object.getPrototypeOf(arrWrapperProto);
+
+console.log(objectProto); // Object
+
+const objectParentProto = Object.getPrototypeOf(objectProto);
+
+console.log(objectParentProto); // null
+```
+### 프로퍼티, 메소드 조회
+- 만약 여러분이 프로퍼티나 메서드에 접근하려고 노력할 때 자바스크립트는 그것들을 맨 먼저 현재 객체에서 찾으려고 할 것입니다.
+- 그것들을 현재 객체에서 찾지 못할경우 프로토타입 체인을 이용하여 부모의 객체에서 찾습니다.
+- 이 과정을 프로퍼티와 메서드를 발견할 때까지 혹은 null에 도달할 때까지 지속합니다.
+- 이것이 바로 속성 또는 메서드를 조회하는 방법입니다.  
+> Object.prototype
+> 모든 객체는 프로토타입의 계층 구조인 프로토타입 체인에 묶여 있다. 자바스크립트 엔진은 객체의 프로퍼티(메서드 포함)에 접근하려고 할 때 해당 객체에 접근하려는 프로퍼티가 없다면 __proto__ 접근자 프로퍼티가 가리키는 참조를 따라 자신의 부모 역할을 하는 프로토타입의 프로퍼티를 순차적으로 검색한다. 프로토타입 체인의 종점, 즉 프로토타입 체인의 최상위 객체는 Object.prototype이며, 기 객체의 프로퍼티와 메서드는 모든 객체에 상속된다. 
+> 출처 : 모던 자바스크립트 Deep Dive
+ 
+### 프로토타입의(을 통한) 상속
+- 프로토타입의 주용 사용 사례는 코드를 상속받아 재사용하는 것입니다. 
+- 상속은 프로토타입 체인으로 가능하게 됩니다. 
+- 이해를 위한 예를 살펴봅시다.
+```js
+const person = {
+  isTalkative: true,
+  talk() {
+    console.log("Talking...");
+  },
+};
+
+const student = {
+  name: "John",
+  age: 12,
+};
+
+Object.setPrototypeOf(student, person);
+
+console.log(student.name); // John
+
+console.log(student.isTalkative); // true
+
+student.talk(); // Talking...
+
+console.log(Object.getPrototypeOf(student) === person); // true
+```
+- 여기서 우리는 `Object.setPrototypeof()`메서드를 사용하여 student의 프로토타입을 person으로 지정하였습니다.
+- 이말은 곧 student는 상속을 통해 person의 프로퍼티와 메서드를 상속받게 됬다는 것입니다.
+- student는 person의 모든 프로퍼티와 메서드에 접근이 가능하게 된 것입니다.
+- 위의 예시에서 프로토타입 체인을 시각화해봅시다.
+![image](https://user-images.githubusercontent.com/78008369/133735194-5251098b-f3a3-4e63-8fb5-b6d8f1d8d8e0.png)
+- student의 프로토타입은 person이고, person의 프로토타입은 `Object`입니다. 그리고 `Object`의 프로토타입은 `null`입니다.
+- 이것은 곧 student는 `Object`와 person의 프로퍼티들과 메서드들에 접근할 수 있을 것이라는 것을 의미합니다.
+- 비슷하게 person역시 `Object`의 모든 프로퍼티와 메서드에 접근 할 수 있을 것 입니다.
+  
+### 객체 생성
+- 프로토타입에 대하여 알아보았으니 프로토타입을 이용해서 우리 자신의 객체를 만드는 방법을 알아봅시다.
+```js
+function Student(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+Student.prototype.isTalkative = true;
+
+Student.prototype.talk = function () {
+  console.log("Talking...");
+};
+
+const john = new Student("John", 12);
+
+console.log(john.age); // 12
+
+john.talk(); // Talking...
+```
+- 위 예시에서 Student 함수는 객체를 만드는 생성자 함수(constructor function)입니다. 
+- 관례적으로 생성자 함수는 일반함수와 구분하기 위하여 첫글자를 대문자로 적어줍니다.
+- `this`키워드는 생성자 함수로 인해 만들어질 인스턴스를 가르킵니다.
+- 화살표 함수의 경우 생성자 함수로서 사용될 수 없음을 기억해주십시오.
+- `new`키워드는 생성자 함수로 객체를 생성할 때 사용합니다.
+- `Object.create()` 메서드는 object literals로 부터 새로운 객체를 만들 때 사용됩니다.
+- 예시를 통해 확인해봅시다.
+```js
+const person = {
+  isHappy: true,
+  introduce() {
+    console.log(`Hi I'm ${this.name}`);
+  },
+};
+
+const john = Object.create(person);
+
+john.name = "John";
+
+console.log(john.isHappy); // true
+john.introduce(); // Hi I'm John
+
+console.log(Object.getPrototypeOf(john) === person); // true
+```
+- `Object.create()` 메서드는 john의 프로토타입을 person 객체로 설정하였습니다.
+- ES6에서 자바스크립트에서 클래스가 추가되었지만 자바스크립트가 클래스기반 언어임을 나타내는 것은 아닙니다. 단순히 문법적으로 바뀐 것일 뿐 여전히 프로토타입 기반의 상속을 사용하고 있습니다. 
+  
+### 결론
+- 프로토타입은 객체이고 이 객체는 그것들의 부모 프로토타입과 함께 모든 재사용 가능한 프로퍼티들과 메서드를 포함하고 있습니다.
+- 프로토타입 체인은 프로토타입들에 의해 연결된 체인입니다.
+- 자바스크립트는 프로퍼티와 메서드를 찾을 때 프로퍼티 체인을 사용합니다.
+- 프로토타입을 통한 상속은 프로토타입 체인을 통해 부모 객체의 프로퍼티와 메서드들을 재사용하게 해줍니다. 
