@@ -52,6 +52,101 @@ callback으로 연쇄적인 비동기를 사용할 경우에는 error 처리를 
 
 적어줬어야했는 반면에, promise를 사용할 경우에는 한번만 사용해도 된다는 것입니다. 
 
+## 자바스크립트에서의 promise
+
+### What is a Promise 프로미스란 무엇인가?
+자바스크립트에서의 promise는 우리의 삶에서 하는 약속과 같이 미래에 일어날 일을 참조합니다.  
+  
+promise는 비동기 작업들을 처리하는데 사용되어지며, 다음과 같은 세가지 가능한 상태가 있습니다.  
+  
+ - Pending(Initial State) 대기 : 이행하거나 거부되지 않은 초기 상태
+ - Fulfilled(Successful) 이행 : 연산이 성공적으로 완료
+ - Rejected(Failed) 거부 : 연산이 실패
+    
+promise 객체를 만들 때 상태는 fulfilled(이행)나 rejected(거부)가 되기 전까지 pending(대기)입니다. 만약 비동기 처리가 성공적으로 완료된다면 프로미스는 pending 상태에서 fulfilled 상태로 변화하며 비동기 처리 결과를 값으로 갖습니다. 비동기 처리가 실패하면 프로미스는 pending 상태에서 rejected 상태로 변화하며 error 객체를 값으로 갖습니다. 
+  
+### Creating a Promise in JavaScript 프로미스 생성하기
+```js
+const promiseExample = new Promise((resolve, reject) => {
+  const condition = true;
+  if (condition) {
+    resolve("Resolve with Any type of data (objects, arrays, strings, etc...");
+  } else {
+    reject("Error description.");
+  }
+});
+```
+Promise 생성자 함수를 new 연산자와 함께 호출하면 프로미스(promise 객체)를 생성합니다. Promise 생성자 함수는 비동기 처리를 할 두 콜백 함수(resolve, reject)를 인자로 받습니다. 비동기 처리가 성공하면 콜백 함수의 인수로  전달받은 resolve 함수를 호출하고, 비동기 처리가 실패하면 reject 함수를 호출합니다. 
+  
+### Using the Promise 프로미스 사용하기
+
+**.then()**
+```js
+const promiseExample = new Promise((resolve, reject) => {
+  const condition = true;
+  if (condition) {
+    resolve("Promise Fulfilled.");
+  } else {
+    reject("Promise Rejected.");
+  }
+});
+
+promiseExample.then((result) => {
+  console.log(result); // Promise Fulfilled.
+});
+```
+`.then()`메서드는 두 개의 콜백함수를 인수로 전달받습니다. 첫번째 콜백 함수는 비동기 처리가 성공했을 때 호출되는 성공 처리 콜백 함수이며, 두 번째 콜백 함수는 비동기 처리가 실패했을 때 호출되는 실패 처리 콜백 함수입니다. 에러를 바로 처리해주어야 하는 경우가 아니라면 두 번째 콜백 함수로 일일이 비동기 처리가 실패했을 때를 위한 상황을 대비하지 않아도 됩니다. 마지막에 에러를 한번에 처리하기 위한 좋은 메서드 `.catch()` 가 있기 때문입니다. 콜백함수 자체는 promise에서 반환된 실제 결과(result === "Promise Fulfilled")를 저장하는 매개 변수를 사용합니다.  
+  
+**.catch()**
+```js
+promiseExample.catch((err) => {
+  console.log(err); // Promise Rejected.
+});
+```
+`.catch`메서드는 한 개의 콜백 함수를 인수로 전달받으며 `.catch`메서드의 콜백 함수는 프로미스가 rejected 상태인 경우만 호출됩니다. 
+  
+**.finally()**
+`.finally`메서드는 한 개의 콜백 함수를 인수로 전달받으며 `finally`메서드의 콜백 함수는 프로미스의 성공, 실패와 무관하게 반드시 한 번 호출됩니다. (전달인자는 받지 않습니다.)
+  
+### Chaining of Promises 프로미스 체이닝
+여러 개의 비동기 작업을 수행해야 할 때 promise chaining을 사용해야 합니다. 
+```js  
+// Resolve promise after 1 sec
+const promiseExample = new Promise((resolve, reject) => {
+  setTimeout(() => { 
+    resolve("data of 1st Promise");
+  }, 1000);
+});
+
+promiseExample
+  // 1st .then()
+  .then((dataOfFirstPromise) => { 
+    console.log(dataOfFirstPromise); // data of 1st Promise
+
+    // simulating API call which resolves after 1 sec.
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve("data of 2nd Promise");
+      }, 1000);
+    });
+
+  })
+  // 2nd .then()
+  .then((dataOfSecondPromise) => { 
+    console.log(dataOfSecondPromise); // data of 2nd Promise
+  })
+
+  .catch((err) => console.log(err));
+  ```
+몇 가지 유의할 점이 있습니다.
+  
+- `.then()`과 `.catch()`메서드는 언제나 프로미스 객체를 반환하므로 우리는 `.then()`과 `.catch()`를 반환된 promise 객체에 다시 사용하여 promise를 연결할 수 있습니다. 
+- 위 예에서는 두 개의 `then`메서드를 사용하였습니다. 따라서 두 번째 `.then()`에서 첫 번째 `.then()`메서드의 결과를 사용하려면 결과를 첫 번째 `.then()`안에서 반환해야합니다.  위 예시의 경우 첫 번째 `.then()`메서드 안에서 promise 객체를 반환하였습니다. 
+- promise에 오류가 발생할 경우 `.catch()`를 사용하여 오류를 파악합니다. `.catch()`메서드는 promise에서 오류가 발생하든 `.then()` 메서드 안에서 오류가 발생하든 언제나 파악할 수 있기에 `.then()`메서드의 두 번째 콜백함수 대신 `.catch()`메서드를 사용합니다. 
+> then메서드와 catch메서드의 콜백 함수가 프로미스를 반환하면 그 프로미스를 그대로 반환하고, 콜백 함수가 프로미스가 아닌 값을 반환하면 그 값을 암묵적으로 resolve 또는 reject하여 프로미스를 생성해 반환합니다. 그러므로 두 메서드는 언제나 프로미스를 반환합니다. 
+  
+위 예시를 보면 `.then()`, `.catch()` 메서드를 사용하여 promise를 chain 할 수 있음을 알 수 있습니다.
+  
 ## JavaScript와 Nodejs가 어떻게 다른 것인지 설명해주세요.
 
 javascript는 웹브라우저를 위한 싱글스레드 비동기 언어이고, node.js는 웹 브라우저 외에서 자바스크립트를 실행할 수 있는 런타임입니다.
